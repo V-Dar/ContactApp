@@ -7,7 +7,16 @@ namespace Api.Storage
         public List<Contact> Contacts { get; set; }
         public ContactStorage()
         {
-            Contacts = new();           
+            Contacts = new();
+            for (int i = 1; i <= 5; i++)
+            {
+                Contacts.Add(new Contact
+                {
+                    Id = i,
+                    Name = $"Полное имя {i}",
+                    Email = $"{Guid.NewGuid().ToString().Substring(0, 5)}_{i}@ksergey.ru"
+                });
+            }
         }
     }
 }
