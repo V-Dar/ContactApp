@@ -1,7 +1,11 @@
 ﻿namespace Api.Storage
 {
-    public static class DataContext
+    public class DataContext
     {
-        public static string Str = "";
+        public string Str { get; set; }
+        public DataContext()
+        {
+            Str = String.Empty;
+        }
     }
 }
