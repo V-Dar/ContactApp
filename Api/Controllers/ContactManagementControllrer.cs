@@ -1,5 +1,6 @@
 ﻿using Api.Model;
 using Api.Storage;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -14,37 +15,36 @@ namespace Api.Controllers
         }
 
         [HttpPost("contacts")]
-        public void CreateContact([FromBody]Contact contact)
+        public IActionResult CreateContact([FromBody]Contact contact)
         {
-            contactStorage.Contacts.Add(contact);
+            bool result = contactStorage.Add(contact);
+            if (result)
+                return Ok(contact);
+            return Conflict("Контакт с указанным id уже существует.");
         }
 
         [HttpGet("contacts")]
-        public List<Contact> GetContacts()
+        public ActionResult<List<Contact>> GetContacts()
         {
-            return contactStorage.Contacts;
+            return Ok(contactStorage.GetContacts());
         }
 
         [HttpDelete("contacts/{id}")]
-        public void DeleteContact(int id)
+        public ActionResult DeleteContact(int id)
         {
-            Contact? contact = contactStorage.Contacts.FirstOrDefault(t => t.Id == id);
-            if(contact is not null)
-                contactStorage.Contacts.Remove(contact);
+            bool result = contactStorage.Remove(id);
+            if (result)
+                return NoContent();
+            return BadRequest("Контакт с указанным id не найден.");
         }
 
         [HttpPut("contacts/{id}")]
-        public void UpdateContact([FromBody] ContactDto contactDto, int id)
-        {
-            Contact? contact = contactStorage.Contacts.FirstOrDefault(t => t.Id == id);
-            if (contact is not null)
-            {
-                if (String.IsNullOrEmpty(contactDto.Email))
-                    contact.Email = contactDto.Email;
-
-                if (String.IsNullOrEmpty(contactDto.Name))
-                    contact.Name = contactDto.Name;
-            }
+        public ActionResult UpdateContact([FromBody] ContactDto contactDto, int id)
+        {  
+            bool result = contactStorage.UpdateContact(contactDto, id);
+            if (result)
+                return Ok();
+            return Conflict("Контакт с указанным id не существует.");
         }
     }
 }
