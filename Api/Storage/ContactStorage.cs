@@ -55,5 +55,9 @@ namespace Api.Storage
             }
             return false;
         }
+        public Contact? SearchContact(int id)
+        {
+            return Contacts.FirstOrDefault(t => t.Id == id);
+        }
     }
 }

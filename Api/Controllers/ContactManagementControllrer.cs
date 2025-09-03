@@ -14,12 +14,12 @@ namespace Api.Controllers
             this.contactStorage = contactStorage;
         }
 
-        [HttpPost("contacts")]
-        public IActionResult CreateContact([FromBody]Contact contact)
+        [HttpPost("createContact")]
+        public IActionResult CreateContact([FromBody] Contact contact)
         {
             bool result = contactStorage.Add(contact);
             if (result)
-                return Ok(contact);
+                return Created($"contacts/{contact.Id}", contact);
             return Conflict("Контакт с указанным id уже существует.");
         }
 
@@ -29,7 +29,17 @@ namespace Api.Controllers
             return Ok(contactStorage.GetContacts());
         }
 
-        [HttpDelete("contacts/{id}")]
+        [HttpGet("searchContact/{id}")]
+        public ActionResult<Contact> SearchContact(int id)
+        {
+            if (id < 0) 
+                return BadRequest("Неверный формат id");
+            if (contactStorage.SearchContact(id) is null)
+                return NotFound("Контакт с заданным ID не найден.");
+            return Ok(contactStorage.SearchContact(id));
+        }
+
+        [HttpDelete("deleteContacts/{id}")]
         public ActionResult DeleteContact(int id)
         {
             bool result = contactStorage.Remove(id);
@@ -38,7 +48,7 @@ namespace Api.Controllers
             return BadRequest("Контакт с указанным id не найден.");
         }
 
-        [HttpPut("contacts/{id}")]
+        [HttpPut("updateContact/{id}")]
         public ActionResult UpdateContact([FromBody] ContactDto contactDto, int id)
         {  
             bool result = contactStorage.UpdateContact(contactDto, id);
