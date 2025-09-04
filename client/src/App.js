@@ -1,9 +1,17 @@
-import './App.css';
+import TableContact from "./layout/tableContact/TableContact";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
+    <div className="container mt-5">
+      <div className="card">
+        <div className="card-header">
+          <h1>Список контактов</h1>
+        </div>
 
+        <div className="card-body">
+          <TableContact></TableContact>
+        </div>
+      </div>
     </div>
   );
 }
