@@ -1,9 +1,9 @@
-const RowTableContact = () => {
+const RowTableContact = (props) => {
     return (
         <tr>
-            <td>1</td>
-            <td>Имя фамилия 1</td>
-            <td>example@email1.ru</td>
+            <td>{props.id}</td>
+            <td>{props.name}</td>
+            <td>{props.email}</td>
         </tr>
     )
 }
