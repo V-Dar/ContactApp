@@ -1,3 +1,4 @@
+import FormContact from "./layout/FormContact/FormContact";
 import TableContact from "./layout/tableContact/TableContact";
 import { useState } from "react";
 
@@ -9,16 +10,21 @@ const App = () => {
       { id: 2, name: 'Имя Фамилия2', email: "fake2" },
       { id: 3, name: 'Имя Фамилия3', email: "fake3" }
     ]
-);
+  );
 
-  const addContact = () => {
+  const addContact = (contactName, contactEmail) => {
+    const newid = contacts.length > 0 ? Math.max(...contacts.map(t => t.id)) : 1
     const item = {
-      id: contacts.sort((x, y) => x.id - y.id)[contacts.length - 1].id + 1,
-      name: 'Имя Фамилия4',
-      email: "fake4"
+      id: newid,
+      name: contactName,
+      email: contactEmail
     };
     setContacts([...contacts, item]); // создаем новый массив на основе старого + новый элемент
     console.log(contacts);
+  }
+
+  const deleteContact = (id) => {
+    setContacts(contacts.filter(t => t.id !== id));
   }
 
 
@@ -28,16 +34,12 @@ const App = () => {
         <div className="card-header">
           <h1>Список контактов</h1>
         </div>
-
         <div className="card-body">
-          <TableContact contacts={contacts}></TableContact>
-          <div>
-            <button
-              className="btn btn-primary"
-              onClick={() => { addContact() }}>
-              Добавить контакт
-            </button>
-          </div>
+          <TableContact
+            contacts={contacts}
+            deleteContact={deleteContact}>
+          </TableContact>
+          <FormContact addContact={addContact} />
         </div>
       </div>
     </div>
