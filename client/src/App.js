@@ -1,29 +1,38 @@
+import axios from "axios";
 import FormContact from "./layout/FormContact/FormContact";
 import TableContact from "./layout/tableContact/TableContact";
-import { useState } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 
-
+const baseApiUrl = process.env.REACT_APP_API_URL;
 const App = () => {
-  const [contacts, setContacts] = useState(
-    [
-      { id: 1, name: 'Имя Фамилия1', email: "fake1" },
-      { id: 2, name: 'Имя Фамилия2', email: "fake2" },
-      { id: 3, name: 'Имя Фамилия3', email: "fake3" }
-    ]
+  const [contacts, setContacts] = useState([]
   );
 
+  const url = `${baseApiUrl}/contacts`;
+  useEffect(() => {
+    axios.get(url)
+      .then(response =>
+        setContacts(response.data)
+      );
+  }, []);
+
   const addContact = (contactName, contactEmail) => {
-    const newid = contacts.length > 0 ? Math.max(...contacts.map(t => t.id)) : 1
+    const newid = contacts.length > 0 ? Math.max(...contacts.map(t => t.id)) + 1 : 1
     const item = {
       id: newid,
       name: contactName,
       email: contactEmail
     };
+
+    const url = `${baseApiUrl}/createContact`;
+    console.log(item.id);
+    axios.post(url, item);
     setContacts([...contacts, item]); // создаем новый массив на основе старого + новый элемент
-    console.log(contacts);
   }
 
   const deleteContact = (id) => {
+    const url = `${baseApiUrl}/deleteContacts/${id}`;
+    axios.delete(url);
     setContacts(contacts.filter(t => t.id !== id));
   }
 

@@ -17,10 +17,9 @@ namespace Api.Controllers
         [HttpPost("createContact")]
         public IActionResult CreateContact([FromBody] Contact contact)
         {
-            bool result = contactStorage.Add(contact);
-            if (result)
-                return Created($"contacts/{contact.Id}", contact);
-            return Conflict("Контакт с указанным id уже существует.");
+            return contactStorage.Add(contact) ?
+            Ok(contact) :
+            Conflict("Контакт с указанным ID существует");
         }
 
         [HttpGet("contacts")]
